@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explorer/sign_up/cubit/sign_up_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,7 +125,7 @@ class _SignUpButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   primary: Colors.orangeAccent,
-                    minimumSize: const Size.fromHeight(50),
+                  minimumSize: const Size.fromHeight(50),
                 ),
                 onPressed: state.status.isValidated
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
@@ -133,5 +134,22 @@ class _SignUpButton extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+AddUser(String fullName, String company, int age) {
+  // Create a CollectionReference called users that references the firestore collection
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  Future<void> addUser() {
+    // Call the user's CollectionReference to add a new user
+    return users
+        .add({
+          'full_name': fullName, // John Doe
+          'company': company, // Stokes and Sons
+          'age': age // 42
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 }
